@@ -30,10 +30,7 @@ namespace Fight
                 private Skeleton[] skeletonData;
                 private int depthWidth, depthHeight;
             //Gesture手势的控件
-            GestureController _gestureController;
-
-            const int KEY_DOWN = 0;
-            const int KEY_UP = 2;
+            MyGestureController _myGestureController;
         #endregion
 
         #region Method
@@ -60,10 +57,9 @@ namespace Fight
             //为数据流添加响应函数
             sensor.SkeletonFrameReady += SensorSkeletonFrameReady;
 
-            _gestureController = new GestureController(GestureType.All);
-            _gestureController.GestureRecognized += GestureController_GestureRecognized;
-
-            WinIO.Initialize();
+            _myGestureController = new MyGestureController();
+            _myGestureController.LoadGesture();
+            _myGestureController.GestureRecognized += GestureController_GestureRecognized;
         }
 
 
@@ -89,7 +85,7 @@ namespace Fight
                 {
                     if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
                     {
-                        _gestureController.Update(skeleton);
+                        _myGestureController.Update(skeleton);
                     }
                 }
             }
@@ -228,119 +224,13 @@ namespace Fight
         }
 
 
-        //鼠标键盘事件
-        [System.Runtime.InteropServices.DllImport("user32")]
-        private static extern int mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
-        //移动鼠标 
-        const int MOUSEEVENT_MOVE = 0x0001;
-        //模拟鼠标左键按下 
-        const int MOUSEEVENT_LEFTDOWN = 0x0002;
-        //模拟鼠标左键抬起 
-        const int MOUSEEVENT_LEFTUP = 0x0004;
-        //模拟鼠标右键按下 
-        const int MOUSEEVENT_RIGHTDOWN = 0x0008;
-        //模拟鼠标右键抬起 
-        const int MOUSEEVENT_RIGHTUP = 0x0010;
-        //模拟鼠标中键按下 
-        const int MOUSEEVENT_MIDDLEDOWN = 0x0020;
-        //模拟鼠标中键抬起 
-        const int MOUSEEVENT_MIDDLEUP = 0x0040;
-        //标示是否采用绝对坐标 
-        const int MOUSEEVENT_ABSOLUTE = 0x8000;
-
-        [System.Runtime.InteropServices.DllImport("user32")]
-        public static extern void keybd_event(
-            byte bVk, //虚拟键值
-            byte bScan,// 一般为0
-            int dwFlags, //这里是整数类型 0 为按下，2为释放
-            int dwExtraInfo //这里是整数类型 一般情况下设成为 0
-            );
+        
 
 
         //手势识别与键盘、鼠标关联
-        void GestureController_GestureRecognized(object sender, GestureEventArgs e)
+        void GestureController_GestureRecognized(object sender, MyGestureEventArgs e)
         {
-            int sleep = 75;
-            update.Gesture = e.Name;
-            //WinIO.Initialize();
-            switch (e.Type)
-            {
-                case GestureType.left:
-                    {
-                        //WinIO.KeyDownUp(Keys.Left); // 按下松开
-
-                        keybd_event((byte)Keys.Left, 0, KEY_DOWN, 0);
-                        Thread.Sleep(sleep);
-                        keybd_event((byte)Keys.Left, 0, KEY_UP, 0);
-                    }
-                    break;
-                case GestureType.right:
-                    {
-
-                        //WinIO.KeyDownUp(Keys.Right); // 按下松开
-
-                        keybd_event((byte)Keys.Right, 0, KEY_DOWN, 0);
-                        Thread.Sleep(sleep);
-                        keybd_event((byte)Keys.Right, 0, KEY_UP, 0);
-                    }
-                    break;
-                case GestureType.ctrl:
-                    {
-
-                        //WinIO.KeyDownUp(Keys.ControlKey); // 按下松开                        
-
-                        keybd_event((byte)Keys.ControlKey, 0, KEY_DOWN, 0);
-                        Thread.Sleep(50);
-                        keybd_event((byte)Keys.ControlKey, 0, KEY_UP, 0);
-                    }
-                    break;
-                case GestureType.space:
-                    {
-                        //WinIO.KeyDownUp(Keys.Space); // 按下松开                    
-
-                        keybd_event((byte)Keys.Space, 0, KEY_DOWN, 0);
-                        Thread.Sleep(50);
-                        keybd_event((byte)Keys.Space, 0, KEY_UP, 0);
-                    }
-                    break;
-                //case GestureType.JoinedHands:
-                //    break;
-                //case GestureType.Menu:
-                //    break;
-                //case GestureType.SwipeDown:
-                //    break;
-                //case GestureType.SwipeLeft:
-                //    {
-                //        mouse_event(MOUSEEVENT_MOVE, -10, 0, 0, 0);
-                //    }
-                //    break;
-                //case GestureType.SwipeRight:
-                //    {
-                //        mouse_event(MOUSEEVENT_MOVE, 10, 0, 0, 0);
-                //    }
-                //    break;
-                //case GestureType.SwipeUp:
-                //    break;
-                //case GestureType.WaveLeft:
-                //    {
-                //        keybd_event((byte)Keys.PageDown, 0, KEY_DOWN, 0);
-                //        keybd_event((byte)Keys.PageDown, 0, KEY_UP, 0);
-                //    }
-                //    break;
-                //case GestureType.WaveRight:
-                //    {
-                //        keybd_event((byte)Keys.PageUp, 0, KEY_DOWN, 0);
-                //        keybd_event((byte)Keys.PageUp, 0, KEY_UP, 0);
-                //    }
-                //    break;
-                //case GestureType.ZoomIn:
-                //    break;
-                //case GestureType.ZoomOut:
-                //break;
-                default:
-                    break;
-            }
-           // WinIO.Shutdown(); // 用完后注销
+            
         }
         #endregion
     }

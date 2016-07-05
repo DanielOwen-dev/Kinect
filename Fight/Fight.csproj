@@ -95,7 +95,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="GestureController.cs" />
     <Compile Include="Gestures\Asphalt8\Ctrl.cs" />
     <Compile Include="Gestures\Asphalt8\right.cs" />
     <Compile Include="Gestures\Asphalt8\left.cs" />
@@ -119,10 +118,13 @@
     <Compile Include="Gestures\Zoom\ZoomSegments.cs" />
     <Compile Include="Gestures\MyGesture.cs" />
     <Compile Include="Gestures\MyGestureEventArgs.cs" />
+    <Compile Include="Gestures\MyGestureController.cs" />
     <Compile Include="MyKinect.cs" />
     <Compile Include="MyKinectImage.cs" />
+    <Compile Include="Response\Keyboard.cs" />
+    <Compile Include="Response\Mouse.cs" />
     <Compile Include="Update.cs" />
-    <Compile Include="WinIO.cs" />
+    <Compile Include="Response\WinIO.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

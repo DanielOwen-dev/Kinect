@@ -1,6 +1,6 @@
 ﻿using Microsoft.Kinect;
 
-namespace Fight.Gestures
+namespace LightBuzz.Vitruvius
 {
     class MySegment_condition
     {

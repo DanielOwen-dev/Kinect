@@ -63,13 +63,8 @@ namespace Fight
             //停止设备
             if (null != sensor)
             {
-                //关闭音频源
-                //sensor.AudioSource.Stop();
-                //关闭设备
                 sensor.Stop();                 
             }
-
-            WinIO.Shutdown(); // 用完后注销
         }
               
         #endregion
