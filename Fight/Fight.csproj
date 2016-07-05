@@ -100,10 +100,7 @@
     <Compile Include="Gestures\Asphalt8\right.cs" />
     <Compile Include="Gestures\Asphalt8\left.cs" />
     <Compile Include="Gestures\Asphalt8\Space.cs" />
-    <Compile Include="Gestures\Gesture.cs" />
-    <Compile Include="Gestures\GestureEventArgs.cs" />
     <Compile Include="Gestures\GesturePartResult.cs" />
-    <Compile Include="Gestures\GestureType.cs" />
     <Compile Include="Gestures\IGestureSegment.cs" />
     <Compile Include="Gestures\JoinedHands\JoinedHandsSegment.cs" />
     <Compile Include="Gestures\Menu\MenuSegments.cs" />
@@ -121,7 +118,7 @@
     <Compile Include="Gestures\WaveRight\WaveRightSegments.cs" />
     <Compile Include="Gestures\Zoom\ZoomSegments.cs" />
     <Compile Include="Gestures\MyGesture.cs" />
-    <Compile Include="MyGestureEventArgs.cs" />
+    <Compile Include="Gestures\MyGestureEventArgs.cs" />
     <Compile Include="MyKinect.cs" />
     <Compile Include="MyKinectImage.cs" />
     <Compile Include="Update.cs" />
