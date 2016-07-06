@@ -16,7 +16,7 @@ namespace LightBuzz.Vitruvius
         /// A list of all the gestures the controller is searching for.
         /// </summary>
         private List<MyGesture> _gestures = new List<MyGesture>();
-
+        int Player;
         #endregion
 
         #region Constructors
@@ -49,8 +49,9 @@ namespace LightBuzz.Vitruvius
         /// Updates all gestures.
         /// </summary>
         /// <param name="skeleton">The skeleton data.</param>
-        public void Update(Skeleton skeleton)
+        public void Update(Skeleton skeleton,int player)
         {
+            Player = player;
             foreach (MyGesture gesture in _gestures)
             {
                 gesture.Update(skeleton);
@@ -93,7 +94,7 @@ namespace LightBuzz.Vitruvius
                         int Type = Convert.ToInt32(x.Attribute("Type").Value);
                         int Joint0 = Convert.ToInt32(x.Attribute("Joint0").Value);
                         int Joint1 = Convert.ToInt32(x.Attribute("Joint1").Value);
-                        int Number = Convert.ToInt32(x.Attribute("Number").Value);
+                        float Number = (float)Convert.ToDouble(x.Attribute("Number").Value);
                         myCondition[NumCon] = new MySegment_condition(Type, (JointType)Joint0, (JointType)Joint1, Number);
                         NumCon++;
                     }
@@ -130,6 +131,8 @@ namespace LightBuzz.Vitruvius
         /// 将消息从Gesture_Contronller传到Gesture
         private void OnGestureRecognized(object sender, MyGestureEventArgs e)
         {
+            e.Player = Player;//玩家编号
+
             GestureRecognized?.Invoke(this, e);
 
             foreach (MyGesture gesture in _gestures)

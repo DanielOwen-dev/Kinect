@@ -6,13 +6,14 @@ namespace LightBuzz.Vitruvius
     {
         int type;//0-2
         private JointType[] Joint;
-        int num;
-        public MySegment_condition(int _type, JointType _Joint1, JointType _Joint2, int _num)
+        float num;
+        public MySegment_condition(int _type, JointType _Joint1, JointType _Joint2, float _num)
         {
             type = _type;
             Joint = new JointType[2];
             Joint[0] = _Joint1;
             Joint[1] = _Joint2;
+            num = _num;
         }
 
         public bool Judge(Skeleton skeleton)

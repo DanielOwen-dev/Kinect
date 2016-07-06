@@ -31,6 +31,9 @@ namespace Fight
                 private int depthWidth, depthHeight;
             //Gesture手势的控件
             MyGestureController _myGestureController;
+            int ControllerID = -1;
+            MyGestureController _myGestureController1;
+            int ControllerID1 = -1;
         #endregion
 
         #region Method
@@ -60,9 +63,34 @@ namespace Fight
             _myGestureController = new MyGestureController();
             _myGestureController.LoadGesture();
             _myGestureController.GestureRecognized += GestureController_GestureRecognized;
+
+            _myGestureController1 = new MyGestureController();
+            _myGestureController1.LoadGesture();
+            _myGestureController1.GestureRecognized += GestureController_GestureRecognized;
         }
 
 
+
+        private int FindPlayer(int other)
+        {
+            Skeleton skeleton;
+            for (int i = 0; i < skeletonData.Length; i++)
+            {
+                skeleton = skeletonData[i];
+                if (skeleton == null) return -1;
+                if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
+                {
+                    if (i != other) return i;   //查找成功
+                }
+            }
+            return -1;  //查找失败
+        }
+
+        private bool CanUpdate(int i)
+        {
+            if (i == -1) return false;
+            else return skeletonData[i].TrackingState == SkeletonTrackingState.Tracked;
+        }
 
         //骨骼
         public void SensorSkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
@@ -70,6 +98,7 @@ namespace Fight
 
 
             Boolean flag = false;
+            
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
                 if (skeletonFrame != null)
@@ -79,18 +108,12 @@ namespace Fight
                 }
             }
 
-            try
-            {
-                foreach (Skeleton skeleton in skeletonData)
-                {
-                    if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
-                    {
-                        _myGestureController.Update(skeleton);
-                    }
-                }
-            }
-            catch { }
-            
+            if( ControllerID==-1 )    { ControllerID = FindPlayer(ControllerID1); }
+            if( ControllerID1 == -1 ) { ControllerID1 = FindPlayer(ControllerID); }
+            if (CanUpdate(ControllerID)) _myGestureController.Update(skeletonData[ControllerID],0);
+            else ControllerID = -1;
+            if (CanUpdate(ControllerID1)) _myGestureController1.Update(skeletonData[ControllerID1],1);
+            else ControllerID1 = -1;
 
             if (flag)
             { 
@@ -224,14 +247,87 @@ namespace Fight
         }
 
 
-        
 
+
+        int i = 0;
 
         //手势识别与键盘、鼠标关联
         void GestureController_GestureRecognized(object sender, MyGestureEventArgs e)
         {
-            
+            i++;
+            update.Gesture = i.ToString()+" "+ ControllerID.ToString() + " " + ControllerID1.ToString() + " " + e.Player;
+            //keybd_event((byte)Keys.ControlKey, 0, 2, 0);
+            //update.Gesture = e.TrackingID.ToString();
+            //if( e.TrackingID==-2 )   //第一玩家
+            //{
+            //switch (e.ID)
+            //{
+            //    case 0:
+            //        //keybd_event((byte)Keys.ControlKey, 0, 0, 0);
+            //        //Thread.Sleep(75);
+            //        //keybd_event((byte)Keys.ControlKey, 0, 2, 0);
+            //        keybd_event((byte)Keys.W, 0, 0, 0);
+            //        Thread.Sleep(75);
+            //        keybd_event((byte)Keys.W, 0, 2, 0);
+            //        break;
+            //    case 1:
+            //        //keybd_event((byte)Keys.Space, 0, 0, 0);
+            //        //Thread.Sleep(75);
+            //        //keybd_event((byte)Keys.Space, 0, 2, 0);
+            //        keybd_event((byte)Keys.W, 0, 0, 0);
+            //        Thread.Sleep(75);
+            //        keybd_event((byte)Keys.W, 0, 2, 0);
+            //        break;
+            //    case 2:
+            //        //keybd_event((byte)Keys.Left, 0, 0, 0);
+            //        //Thread.Sleep(75);
+            //        //keybd_event((byte)Keys.Left, 0, 2, 0);
+            //        keybd_event((byte)Keys.W, 0, 0, 0);
+            //        Thread.Sleep(75);
+            //        keybd_event((byte)Keys.W, 0, 2, 0);
+            //        break;
+            //    case 4:
+            //        keybd_event((byte)Keys.W, 0, 0, 0);
+            //        Thread.Sleep(75);
+            //        keybd_event((byte)Keys.W, 0, 2, 0);
+            //        //keybd_event((byte)Keys.Right, 0, 0, 0);
+            //        //Thread.Sleep(75);
+            //        //keybd_event((byte)Keys.Right, 0, 2, 0);
+            //        break;
+            //    default: break;
+            //}
+            // }
+
         }
+
+        [System.Runtime.InteropServices.DllImport("user32")]
+        private static extern int mouse_event(int dwFlags, int dx, int dy, int cButtons, int dwExtraInfo);
+        //移动鼠标 
+        const int MOUSEEVENT_MOVE = 0x0001;
+        //模拟鼠标左键按下 
+        const int MOUSEEVENT_LEFTDOWN = 0x0002;
+        //模拟鼠标左键抬起 
+        const int MOUSEEVENT_LEFTUP = 0x0004;
+        //模拟鼠标右键按下 
+        const int MOUSEEVENT_RIGHTDOWN = 0x0008;
+        //模拟鼠标右键抬起 
+        const int MOUSEEVENT_RIGHTUP = 0x0010;
+        //模拟鼠标中键按下 
+        const int MOUSEEVENT_MIDDLEDOWN = 0x0020;
+        //模拟鼠标中键抬起 
+        const int MOUSEEVENT_MIDDLEUP = 0x0040;
+        //标示是否采用绝对坐标 
+        const int MOUSEEVENT_ABSOLUTE = 0x8000;
+
+        [System.Runtime.InteropServices.DllImport("user32")]
+        public static extern void keybd_event(
+            byte bVk, //虚拟键值
+            byte bScan,// 一般为0
+            int dwFlags, //这里是整数类型 0 为按下，2为释放
+            int dwExtraInfo //这里是整数类型 一般情况下设成为 0
+            );
+        const int KEY_DOWN = 0;
+        const int KEY_UP = 2;
         #endregion
     }
 }

@@ -21,6 +21,7 @@ namespace LightBuzz.Vitruvius
 
         public int ID { get; private set; }
 
+        public int Player {get;set;}
         #endregion
 
         #region Constructors
