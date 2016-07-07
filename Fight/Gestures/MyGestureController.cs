@@ -24,8 +24,9 @@ namespace LightBuzz.Vitruvius
         /// <summary>
         /// Initializes a new instance of <see cref="GestureController"/>.
         /// </summary>
-        public MyGestureController()
+        public MyGestureController(string file)
         {
+            LoadGesture(file);
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace LightBuzz.Vitruvius
         /// 
 
         
-        public void LoadGesture()
+        public void LoadGesture(string file)
         {
             System.Xml.Linq.XDocument xdoc = System.Xml.Linq.XDocument.Load("Gesture.xml");
             System.Xml.Linq.XElement xeRoot = xdoc.Root;

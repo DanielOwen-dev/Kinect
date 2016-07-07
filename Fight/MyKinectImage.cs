@@ -30,10 +30,8 @@ namespace Fight
                 private Skeleton[] skeletonData;
                 private int depthWidth, depthHeight;
             //Gesture手势的控件
-            MyGestureController _myGestureController;
-            int ControllerID = -1;
-            MyGestureController _myGestureController1;
-            int ControllerID1 = -1;
+            MyGestureController[] _myGestureController;
+            int[] ControllerID ;
         #endregion
 
         #region Method
@@ -60,18 +58,31 @@ namespace Fight
             //为数据流添加响应函数
             sensor.SkeletonFrameReady += SensorSkeletonFrameReady;
 
-            _myGestureController = new MyGestureController();
-            _myGestureController.LoadGesture();
-            _myGestureController.GestureRecognized += GestureController_GestureRecognized;
 
-            _myGestureController1 = new MyGestureController();
-            _myGestureController1.LoadGesture();
-            _myGestureController1.GestureRecognized += GestureController_GestureRecognized;
+
+            int player_number = 2;      //玩家数
+            string[] file = { " ", " ", " ", " ", " ", " " };// 初始化文件
+
+            _myGestureController = new MyGestureController[player_number];
+            ControllerID = new int[player_number];
+            for (int i = 0; i < player_number; i++)
+            {
+                ControllerID[i] = -1;
+                _myGestureController[i] = new MyGestureController(file[i]);
+                _myGestureController[i].GestureRecognized += GestureController_GestureRecognized;
+            }
         }
 
 
 
-        private int FindPlayer(int other)
+        private bool isExist(int i)
+        {
+            foreach (var id in ControllerID)//查找玩家是否存在
+                if (i == id) return true;
+            return false;
+        }
+
+        private int FindPlayer()
         {
             Skeleton skeleton;
             for (int i = 0; i < skeletonData.Length; i++)
@@ -80,7 +91,8 @@ namespace Fight
                 if (skeleton == null) return -1;
                 if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
                 {
-                    if (i != other) return i;   //查找成功
+                   
+                    if ( !isExist(i) ) return i; //查找成功
                 }
             }
             return -1;  //查找失败
@@ -97,8 +109,9 @@ namespace Fight
         {
 
 
-            Boolean flag = false;
+            Boolean flag = false;                                                             
             
+
             using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
             {
                 if (skeletonFrame != null)
@@ -108,42 +121,23 @@ namespace Fight
                 }
             }
 
-            if( ControllerID==-1 )    { ControllerID = FindPlayer(ControllerID1); }
-            if( ControllerID1 == -1 ) { ControllerID1 = FindPlayer(ControllerID); }
-            if (CanUpdate(ControllerID)) _myGestureController.Update(skeletonData[ControllerID],0);
-            else ControllerID = -1;
-            if (CanUpdate(ControllerID1)) _myGestureController1.Update(skeletonData[ControllerID1],1);
-            else ControllerID1 = -1;
-
             if (flag)
             { 
                 skeletonImage.Draw(new Rectangle(0, 0, skeletonImage.Width, skeletonImage.Height), new Bgr(0.0, 0.0, 0.0), -1);
-                DrawSkeletons(skeletonImage, 0);
-                //update.change(skeletonImage.Bitmap);
-                update.SkeletonImage=ToBitmapSource(skeletonImage);
-            }
-        }
 
-
-
-
-
-
-
-
-
-
-
-
-        //标记所有正确Tracked的关节点
-        private void DrawSkeletons(Image<Bgr, Byte> img, int depthOrColor)
-        {
-            foreach (Skeleton skeleton in this.skeletonData)
-            {
-                if (skeleton.TrackingState == SkeletonTrackingState.Tracked)
+                for (int i = 0; i < ControllerID.Length; i++)
                 {
-                    DrawTrackedSkeletonJoints(img, skeleton.Joints, depthOrColor);
+                    //控制器没有玩家 寻找新玩家
+                    if (ControllerID[i] == -1) ControllerID[i] = FindPlayer();
+                    //玩家还存在，更新命令 否则，删除玩家 
+                    if (CanUpdate(ControllerID[i]))
+                    {
+                        _myGestureController[i].Update(skeletonData[ ControllerID[i] ], i);
+                        DrawTrackedSkeletonJoints(skeletonImage, skeletonData[ControllerID[i]].Joints, i);
+                    }
+                    else ControllerID[i] = -1;
                 }
+                update.SkeletonImage=ToBitmapSource(skeletonImage);
             }
         }
 
@@ -207,12 +201,21 @@ namespace Fight
         //绘制骨骼线的具体实现
         private void DrawBoneLine(Image<Bgr, Byte> img, SkeletonPoint p1, SkeletonPoint p2, int lineWidth, int depthOrColor)
         {
+            Bgr[] color = {
+                            new Bgr( 163 ,73 ,164 ),
+                            new Bgr( 63 ,72 ,204 ),
+                            new Bgr( 0 ,162 ,232 ),
+                            new Bgr( 34 ,177 ,76 ),
+                            new Bgr( 255 ,242 ,0 ),
+                            new Bgr( 255 ,127 ,39 )
+                          };
+
             System.Drawing.Point p_1, p_2;
             
             p_1 = SkeletonPointToDepthScreen(p1);
             p_2 = SkeletonPointToDepthScreen(p2);
 
-            img.Draw(new LineSegment2D(p_1, p_2), new Bgr(255, 255, 0), lineWidth);
+            img.Draw(new LineSegment2D(p_1, p_2), color[depthOrColor], lineWidth);
             img.Draw(new CircleF(p_1, 5), new Bgr(0, 0, 255), -1);
         }
 
@@ -254,8 +257,12 @@ namespace Fight
         //手势识别与键盘、鼠标关联
         void GestureController_GestureRecognized(object sender, MyGestureEventArgs e)
         {
+            //switch(e.Player)//不同玩家
+            //{
+
+            //}
             i++;
-            update.Gesture = i.ToString()+" "+ ControllerID.ToString() + " " + ControllerID1.ToString() + " " + e.Player;
+            update.Gesture = i.ToString()+" "+ ControllerID[0].ToString() + " " + ControllerID[1].ToString() + " " + e.Player;
             //keybd_event((byte)Keys.ControlKey, 0, 2, 0);
             //update.Gesture = e.TrackingID.ToString();
             //if( e.TrackingID==-2 )   //第一玩家
