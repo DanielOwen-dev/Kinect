@@ -253,6 +253,7 @@ namespace Fight
 
 
         int i = 0;
+        string zxc;
 
         //手势识别与键盘、鼠标关联
         void GestureController_GestureRecognized(object sender, MyGestureEventArgs e)
@@ -261,49 +262,78 @@ namespace Fight
             //{
 
             //}
-            i++;
-            update.Gesture = i.ToString()+" "+ ControllerID[0].ToString() + " " + ControllerID[1].ToString() + " " + e.Player;
+            
             //keybd_event((byte)Keys.ControlKey, 0, 2, 0);
             //update.Gesture = e.TrackingID.ToString();
-            //if( e.TrackingID==-2 )   //第一玩家
-            //{
-            //switch (e.ID)
-            //{
-            //    case 0:
-            //        //keybd_event((byte)Keys.ControlKey, 0, 0, 0);
-            //        //Thread.Sleep(75);
-            //        //keybd_event((byte)Keys.ControlKey, 0, 2, 0);
-            //        keybd_event((byte)Keys.W, 0, 0, 0);
-            //        Thread.Sleep(75);
-            //        keybd_event((byte)Keys.W, 0, 2, 0);
-            //        break;
-            //    case 1:
-            //        //keybd_event((byte)Keys.Space, 0, 0, 0);
-            //        //Thread.Sleep(75);
-            //        //keybd_event((byte)Keys.Space, 0, 2, 0);
-            //        keybd_event((byte)Keys.W, 0, 0, 0);
-            //        Thread.Sleep(75);
-            //        keybd_event((byte)Keys.W, 0, 2, 0);
-            //        break;
-            //    case 2:
-            //        //keybd_event((byte)Keys.Left, 0, 0, 0);
-            //        //Thread.Sleep(75);
-            //        //keybd_event((byte)Keys.Left, 0, 2, 0);
-            //        keybd_event((byte)Keys.W, 0, 0, 0);
-            //        Thread.Sleep(75);
-            //        keybd_event((byte)Keys.W, 0, 2, 0);
-            //        break;
-            //    case 4:
-            //        keybd_event((byte)Keys.W, 0, 0, 0);
-            //        Thread.Sleep(75);
-            //        keybd_event((byte)Keys.W, 0, 2, 0);
-            //        //keybd_event((byte)Keys.Right, 0, 0, 0);
-            //        //Thread.Sleep(75);
-            //        //keybd_event((byte)Keys.Right, 0, 2, 0);
-            //        break;
-            //    default: break;
-            //}
-            // }
+            if (e.Player == 0)   //第一玩家
+            {
+                i++;
+                int t = 30;
+                zxc = i.ToString() + " " + e.Name + " " + ControllerID[0].ToString() + " " + ControllerID[1].ToString() + " " + e.Player + "\n";
+                zxc += update.Gesture;
+                update.Gesture = zxc;
+                //mouse_event(MOUSEEVENT_MOVE | MOUSEEVENT_ABSOLUTE, (int)0.5*65535, (int)0.5 * 65535, 0, 0);
+                mouse_event(MOUSEEVENT_MOVE | MOUSEEVENT_ABSOLUTE, 32767, 32767, 0, 0);
+                switch (e.ID)
+                {
+                    case 0:
+                        mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_MOVE, 0, 50, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
+                        //keybd_event((byte)Keys.Down, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.Down, 0, 2, 0);
+                        //keybd_event((byte)Keys.W, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.W, 0, 2, 0);
+                        break;
+                    case 1:
+                        mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_MOVE, 0, -50, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
+                        //keybd_event((byte)Keys.Up, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.Up, 0, 2, 0);
+                        //keybd_event((byte)Keys.W, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.W, 0, 2, 0);
+                        break;
+                    case 2:
+                        mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_MOVE, -50, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
+                        //keybd_event((byte)Keys.Left, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.Left, 0, 2, 0);
+                        //keybd_event((byte)Keys.W, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.W, 0, 2, 0);
+                        break;
+                    case 3:
+                        mouse_event(MOUSEEVENT_LEFTDOWN, 0, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_MOVE, 50, 0, 0, 0);
+                        Thread.Sleep(t);
+                        mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
+                        //keybd_event((byte)Keys.Right,0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.Right, 0, 2, 0);
+                        //keybd_event((byte)Keys.Right, 0, 0, 0);
+                        //Thread.Sleep(75);
+                        //keybd_event((byte)Keys.Right, 0, 2, 0);
+                        break;
+                    default:
+                        //keybd_event((byte)Keys.Left, 0, 2, 0);
+                        //keybd_event((byte)Keys.Right, 0, 2, 0);
+                        break;
+                }
+            }
 
         }
 
