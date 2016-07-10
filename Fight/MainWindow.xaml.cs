@@ -29,5 +29,10 @@ namespace Fight
         }
 
         private Update update;
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+           new TreeViewDemo.MainWindow().Show();
+        }
     }
 }

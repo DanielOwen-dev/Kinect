@@ -2,28 +2,20 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        GlowBrush="{DynamicResource AccentColorBrush}"
+        WindowStartupLocation="CenterScreen"
         Title="WPF for Kinect" Height="650" Width="1250">
-    
-    <!--顶部右侧命令按钮
-    <controls:MetroWindow.RightWindowCommands>
-        <controls:WindowCommands>
-            <Button Content="settings" />
-            <Button Content="设置" />
-        </controls:WindowCommands>
-    </controls:MetroWindow.RightWindowCommands>-->
-
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
 
 
-
+        <Button Content="Gesture" Click="Button_Click" Grid.Row="1" Grid.Column="0"></Button>
         <GroupBox Grid.Row="0" Grid.Column="0">
             <Image Source="{Binding SkeletonImage}" Stretch="Fill"  />
         </GroupBox>

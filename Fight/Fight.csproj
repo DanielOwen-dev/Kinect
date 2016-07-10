@@ -164,6 +164,12 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\DanielOwen\Desktop\TreeViewDemo\TreeViewDemo.csproj">
+      <Project>{76baf322-45c5-4b25-bdb2-21a724f5830d}</Project>
+      <Name>TreeViewDemo</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
