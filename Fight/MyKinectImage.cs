@@ -321,7 +321,7 @@ namespace Fight
                         mouse_event(MOUSEEVENT_MOVE, 50, 0, 0, 0);
                         Thread.Sleep(t);
                         mouse_event(MOUSEEVENT_LEFTUP, 0, 0, 0, 0);
-                        //keybd_event((byte)Keys.Right,0, 0, 0);
+                        keybd_event((byte)Keys.Right,0, 0, 0);
                         //Thread.Sleep(75);
                         //keybd_event((byte)Keys.Right, 0, 2, 0);
                         //keybd_event((byte)Keys.Right, 0, 0, 0);
